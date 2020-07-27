@@ -12,7 +12,7 @@ function init() {
 	/*
 	 * set heights of scatterplot and text area
 	 */
-    scatterHeight = (document.getElementById("scatterplot").clientHeight) ;
+    scatterHeight = Math.min(scatterHeight,document.getElementById("scatterplot").clientHeight) ;
     scatterWidth = document.getElementById("scatterplot").clientWidth;
 
     document.querySelector(".vizText").setAttribute("style","height:"+(scatterHeight)+"px");
