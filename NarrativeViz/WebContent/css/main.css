@@ -1,0 +1,134 @@
+html, button, input, select, textarea, text
+.pure-g [class *= "pure-u"] {
+    /* Set your content font stack here: */
+    font-family: "Bodoni MT", Didot, "Didot LT STD", "Hoefler Text", Garamond, "Times New Roman", serif;
+}
+
+.container {
+	margin:auto;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    height: 95vh;
+}
+
+.vizText {
+  overflow-y: scroll;
+  height: 100%;
+}
+
+circle {fill: lightgrey; stroke: lightgrey; fill-opacity:0.7; }
+text { font-family: "Bodoni MT", Didot, "Didot LT STD", "Hoefler Text", Garamond, "Times New Roman", serif; font-style: normal; font-variant: normal; }
+.h1 { font-size: 32px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; text-align: center; }
+.h2 { font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; text-align: center; }
+.h3 { font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; text-align: center; margin-bottom: 3px;}
+.legend { font-size: 12px; }
+p {  font-size: 18px; font-style: normal; font-variant: normal; font-weight: 400; }
+.blockquote { font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; }
+.pre {  font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5714px; }
+
+
+
+text.guide{ font-size: 10px; }
+
+.region-eap, .region-eca, .region-lac, .region-mena, .region-na,
+.region-sa, .region-ssa    { 
+	fill-opacity:0.8; 
+	transition: 800ms; 
+	stroke: darkgrey;
+	stroke-opacity:0.9; 
+	transition-property: stroke, fill; 
+}
+
+.region-eap  { fill: red;      fill-opacity:0.5; } /* East Asia & Pacific */
+.region-eca  { fill: orange;   } /* Europe & Central Asia */
+.region-lac  { fill: #CCCC00;  } /* Latin America & Caribbean */
+.region-mena { fill: green;    } /* Middle East & North Africa */
+.region-na   { fill: cyan;     } /* North America */
+.region-sa   { fill: #0000ff;  } /* South Asia */
+.region-ssa  { fill: #ff00ff;  fill-opacity:0.4; } /* Sub-Saharan Africa */
+
+.region-eap-reg  { stroke: red;     stroke-opacity:0.9; transition-property: stroke } /* East Asia & Pacific */
+.region-eca-reg  { stroke: orange;  stroke-opacity:0.9; transition-property: stroke } /* Europe & Central Asia */
+.region-lac-reg  { stroke: #CCCC00; stroke-opacity:0.9; transition-property: stroke } /* Latin America & Caribbean */
+.region-mena-reg { stroke: green;   stroke-opacity:0.9; transition-property: stroke } /* Middle East & North Africa */
+.region-na-reg   { stroke: cyan;    stroke-opacity:0.9; transition-property: stroke } /* North America */
+.region-sa-reg   { stroke: #0000ff; stroke-opacity:0.9; transition-property: stroke } /* South Asia */
+.region-ssa-reg  { stroke: #ff00ff; stroke-opacity:0.9; transition-property: stroke } /* Sub-Saharan Africa */
+
+
+.basecircle { fill: lightgrey;  stroke: lightgrey; fill-opacity:0.7; stroke-opacity:0.7; transition: fill 800ms; }
+.dull    	{ fill: white;  	stroke: lightgrey; fill-opacity:0.7; stroke-opacity:0.7; transition: fill 800ms; }
+.notdull 	{ fill: black;    	stroke: darkgrey;  fill-opacity:0.7; stroke-opacity:0.7; transition: fill 800ms; r: 4 }
+
+.pullQuote {
+	font-size: 28px;
+	width: 66%;
+	text-align:left;
+	margin:auto;
+}
+
+.tooltip {
+	fill: black;
+	font-size: 12px;
+	background-color: white;
+}
+
+.quote {
+	font-style: italic;
+}
+.cite { 
+	font-size: 11px;
+	font-weight: bold; 
+}
+.triggerText {
+	text-align:center;
+}
+.sectionText {
+	display: inline-block;
+	margin-left: 50px;
+    margin-right: 50px;
+}
+.formSection {
+	/* border: 1px solid lightgrey; */
+	display: inline-block;
+	margin-left: 50px;
+    margin-right: 50px;
+    text-align:left;
+    font-size:12px;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 4px;
+    font: 10px;
+    background: white;
+    border: 1px solid darkgrey;
+    border-radius: 5px;
+    pointer-events: none;
+    fill-opacity:0.4;
+}
+
+/*
+ * animation from Yannick Bisaillon
+ */
+.bounce {
+  -moz-animation: bounce 6s infinite;
+  -webkit-animation: bounce 6s infinite;
+  animation: bounce 6s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-30px);
+  }
+  60% {
+    transform: translateY(-15px);
+  }
+}
