@@ -4,6 +4,7 @@
 var scatterHeight = 600;
 var scatterWidth = 600;
 var filterSet = {};
+var showTooltipHint = true;
 
 'use strict';
 function init() {
@@ -44,76 +45,103 @@ function init() {
 	loadYear(baseYear);
 	
 	var initialPosition = function(){
+		clearFilterSet();
 		removeRegressionLine();
 		removeRegionTrend();
 		removeColor();
 		removePopovers();
 		removeAdhocLabels();
-		
-		if (currentYear != baseYear)
-			loadYear(baseYear);
+		hideTooltip();
 		
 		showScatter();
 		setScatterTitle("Tuberculosis Incidence vs. GDP")
+		
+		tempDisplay();
 	}
 	var showSection2 = function(){
 		d3.select("#scrollPrompt").remove();
+		clearFilterSet();
 		removeRegionTrend();
 		removePopovers();
 		removeAdhocLabels();
+		hideTooltip();
 		
-		loadYear(baseYear);
+//		loadYear(baseYear);
 		showConforming();
 		showRegressionLine();
 		setScatterTitle("A Common Thread")
+		showAdhocLabel('LUX',['gdp','tb'],[0,7],600)
+		showAdhocLabel('USA',['gdp','tb'],[0,7],600)
+		showAdhocLabel('SOM',['gdp','tb'],[-60,7],600)
+		showAdhocLabel('CAF',['gdp','tb'],[-64,-7],600)
 	}
 	var showSection3 = function(){
+		clearFilterSet();
 		removeRegionTrend();
 		removePopovers();
 		removeAdhocLabels();
+		hideTooltip();
 		
 		showOutliers();
 		setScatterTitle("Outliers");
-		showAdhocLabel('GAB',[])
-		showAdhocLabel('DMA',[])
+		showAdhocLabel('BFA',[],[-85,7],600)
 		
-		showAdhocLabel('SGP',[])
-		showAdhocLabel('BFA',[],[-100,0])
+		showAdhocLabel('GAB',[],[0,10],1200)
+		showAdhocLabel('DMA',[],[0,10],1800)
+		
+		showAdhocLabel('SGP',[],[0,10],2400)
 	}
 	var showSection4 = function(){
+		clearFilterSet();
 		removeRegionTrend();
 		removePopovers();
 		removeAdhocLabels();
+		hideTooltip();
 		
 		setScatterTitle("TB Incidence Variations - Middle Income Countries")
 		colorGdpBins([4,5,6,7]);
-		showAdhocLabel('GAB',['gdp','tb'])
-		showAdhocLabel('DMA',['gdp','tb'])
+		showAdhocLabel('GAB',['gdp','tb'],[0,10],300)
+		showAdhocLabel('DMA',['gdp','tb'],[0,10],600)
 	}
 	var showSection6 = function(){
+		clearFilterSet();
 		removeRegionTrend();
 		removePopovers();
 		removeAdhocLabels();
+		hideTooltip();
 		
 		setScatterTitle("Income Variations - Middle TB Incidence Countries")
 		colorTbBins([5,6,7]);
-		showAdhocLabel('SGP',['gdp','tb'])
-		showAdhocLabel('BFA',['gdp','tb'],[-100,0])
+		showAdhocLabel('SGP',['gdp','tb'],[0,10],600)
+		showAdhocLabel('BFA',['gdp','tb'],[-85,5],300)
 	}
 	var showSection7 = function(){
 		clearFilterSet();
 		removePopovers();
 		removeAdhocLabels();
+		hideTooltip();
 		
 		setScatterTitle("Regional Differences - East Asia & Pacific")
 		updateFilterSet("region","eap");
+		showAdhocLabel('PHL',['gdp','tb'],[0,-20],600)
+		showAdhocLabel('MMR',['gdp','tb'],[-70,10],1200)
+		showAdhocLabel('TON',['gdp','tb'],[0,10],1800)
+		showAdhocLabel('AUS',['gdp','tb'],[0,10],2400)
+		showAdhocLabel('JPN',['gdp','tb'],[0,10],3000)
+		showAdhocLabel('MAC',['gdp','tb'],[0,10],3600)
 	}
 	var showSection8 = function(){
 		clearFilterSet();
 		removePopovers();
+		hideTooltip();
 		
 		setScatterTitle("Regional Differences - Sub-Saharan Africa");
 		updateFilterSet("region","ssa");
+		showAdhocLabel('LSO',['gdp','tb'],[0,-20],600)
+		showAdhocLabel('BDI',['gdp','tb'],[-55,7],1200)
+		showAdhocLabel('SYC',['gdp','tb'],[0,10],1800)
+		showAdhocLabel('GNQ',['gdp','tb'],[0,10],2400)
+		showAdhocLabel('SDN',['gdp','tb'],[0,-20],3000)
 	}
 	var showSection9 = function(){
 		clearFilterSet();
@@ -122,6 +150,26 @@ function init() {
 		colorByRegion();
 		addPopovers();
 		loadCountries();
+		if (showTooltipHint){
+			showTooltip({data:{"countryCode":"EGY","name":"Egypt","region":"Middle East & North Africa","tb":13,"tbBin":4,"gdp":2440.5103,"gdpBin":4,"popDensity":96.883415,"distance":112.71968904183858,"conforming":false,"outlier":true}})
+		    var element = d3.selectAll("#EGY");
+		    var x = +element.attr("cx") - 190,
+		        y = +element.attr("cy") + 40;
+		    
+		    //populate tooltip and show
+		    d3.select("#scatterBody")
+		    	.append("text")
+		        .attr("x", x+5)
+		        .attr("y", y-3)
+		        .attr("class","tooltip")
+		        .style("pointer-events", "none")
+		        .style("opacity",0)
+		        .style("font-style","italic")
+		        .text("hover over country for guides")
+		        .transition().delay(600)
+		        .style("opacity",0.8);
+
+		}
 	}
 
 	
@@ -144,8 +192,8 @@ function init() {
 							case 'section9' : showSection9(); break; 
 						}
 					}
-					else if (entry.target.id == 'section9')
-						clearFilterSet();
+//					else if (entry.target.id == 'section9')
+//						clearFilterSet();
 				})
 			}
 			,{
@@ -585,7 +633,6 @@ function showScatter() {
                 .transition().delay(300)
 	                .attr("r",(d,idx) => { return (d.gdp === null || d.tb === null) ? 0 : 3 ;})
     ;
-
 }
 
 function removePopovers() {
@@ -629,7 +676,34 @@ function loadCountries(){
 	}
 }
 
-function showAdhocLabel(countryCode, labels, shift){
+function tempDisplay(){
+	var delayIdx = 0;
+	for (var idx=0;idx<yearData.length;idx++){
+	    var element = d3.selectAll("#"+yearData[idx].countryCode);
+	    
+	    var x = +element.attr("cx"),
+	        y = +element.attr("cy")
+		
+		delayIdx+=1;
+	    
+	    d3.select("#scatterBody")
+    	.append("text")
+        .attr("id", countries[idx].countryCode+"-adhoc-tooltip")
+        .attr("x", x+5)
+        .attr("y", y-3)
+        .attr("class","adhoc-tooltip")
+        .style("pointer-events", "none")
+        .style("opacity",0)
+        .text(yearData[idx].name)
+        .transition().delay(delayIdx*600)
+        	.style("opacity",1.0)
+        		.transition().delay(1200)
+        			.style("opacity",0)
+        				.remove();
+	}
+}
+
+function showAdhocLabel(countryCode, labels, shift, delay){
     //get location info for tooltip
     var element = d3.selectAll("#"+countryCode);
     var x = +element.attr("cx"),
@@ -640,12 +714,8 @@ function showAdhocLabel(countryCode, labels, shift){
     	x += shift[0];
     	y += shift[1];
     }
-    
-    var text = "<span style=\"color:red\">"+
-    				yearDataByCountryCode[countryCode].name + 
-    				'\nGDP: ' + yearDataByCountryCode[countryCode].gdp + 
-    				'\nTB: ' + yearDataByCountryCode[countryCode].tb +
-    			"</span>"
+    if (delay==undefined)
+    	delay=300;
     
     //populate tooltip and show
     d3.select("#scatterBody")
@@ -653,10 +723,12 @@ function showAdhocLabel(countryCode, labels, shift){
         .attr("id", countryCode+"-adhoc-tooltip")
         .attr("x", x+5)
         .attr("y", y-3)
-        .attr("class","tooltip adhoc-tooltip")
+        .attr("class","adhoc-tooltip")
         .style("pointer-events", "none")
-        .style("opacity",1)
-        .text(yearDataByCountryCode[countryCode].name);
+        .style("opacity",0)
+        .text(yearDataByCountryCode[countryCode].name)
+        .transition().delay(delay)
+        .style("opacity",1.0);
     
     if (labels.includes('gdp'))
 	    d3.select("#"+countryCode+"-adhoc-tooltip")
@@ -684,6 +756,11 @@ function removeAdhocLabels(countryCode){
 }
 
 function showTooltip(d) {
+	showTooltipHint = false;
+    d3.selectAll(".guideWrapper").selectAll("line").remove();
+    d3.selectAll(".guideWrapper").selectAll("text").remove();
+    d3.selectAll(".tooltip").remove();
+	
     //get location info for tooltip
     var element = d3.selectAll("#"+d.data.countryCode);
     var x = +element.attr("cx"),
@@ -694,16 +771,18 @@ function showTooltip(d) {
     	color = "lightgrey";
     
     //populate tooltip and show
-    d3.select("#scatterBody").append("text")
-        .attr("id", d.data.countryCode+"-tooltip")
-        .attr("x", x+3)
-        .attr("y", y-3)
-        .attr("class","tooltip")
-        .text(d.data.name)
-        .style("pointer-events", "none")
-        .style("opacity",0)
-        .transition().duration(300)
-        .style("opacity", 1);
+    if(d3.select("#"+d.data.countryCode+"-adhoc-tooltip").empty())
+	    d3.select("#scatterBody").append("text")
+	        .attr("id", d.data.countryCode+"-tooltip")
+	        .attr("class","guideToolTip")
+	        .attr("x", x+3)
+	        .attr("y", y-3)
+	        .attr("class","tooltip")
+	        .text(d.data.name)
+	        .style("pointer-events", "none")
+	        .style("opacity",0)
+	        .transition().duration(300)
+	        .style("opacity", 1);
 
     //draw guidelines
     var wrapper = d3.selectAll(".guideWrapper");
@@ -752,5 +831,5 @@ function showTooltip(d) {
 function hideTooltip(d) {
     d3.selectAll(".guideWrapper").selectAll("line").remove();
     d3.selectAll(".guideWrapper").selectAll("text").remove();
-    d3.select("#"+d.data.countryCode+"-tooltip").remove();
+    d3.select(".tooltip").remove();
 }

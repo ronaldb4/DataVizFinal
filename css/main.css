@@ -59,7 +59,7 @@ text.guide{ font-size: 10px; }
 .region-ssa-reg  { stroke: #ff00ff; stroke-opacity:0.9; transition-property: stroke } /* Sub-Saharan Africa */
 
 
-.basecircle { fill: lightgrey;  stroke: lightgrey; fill-opacity:0.7; stroke-opacity:0.7; transition: fill 800ms; }
+.basecircle { fill: darkgrey;  stroke: lightgrey; fill-opacity:0.7; stroke-opacity:0.7; transition: fill 800ms; }
 .dull    	{ fill: white;  	stroke: lightgrey; fill-opacity:0.7; stroke-opacity:0.7; transition: fill 800ms; }
 .notdull 	{ fill: black;    	stroke: darkgrey;  fill-opacity:0.7; stroke-opacity:0.7; transition: fill 800ms; r: 4 }
 
@@ -70,7 +70,7 @@ text.guide{ font-size: 10px; }
 	margin:auto;
 }
 
-.tooltip {
+.tooltip, .adhoc-tooltip {
 	fill: black;
 	font-size: 12px;
 	background-color: white;
@@ -125,7 +125,10 @@ div.tooltip {
   0%, 20%, 50%, 80%, 100% {
     transform: translateY(0);
   }
-  40% {
+/*   20% {
+    transform: translateY(-45px);
+  }
+ */  40% {
     transform: translateY(-30px);
   }
   60% {
