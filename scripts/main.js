@@ -18,11 +18,11 @@ function init() {
 
     document.querySelector(".vizText").setAttribute("style","height:"+(scatterHeight)+"px");
     
-    document.querySelectorAll("div.triggerText").forEach((trig => { trig.setAttribute("style","height:"+(scatterHeight*.9)+"px") }))
+//    document.querySelectorAll("div.triggerText").forEach((trig => { trig.setAttribute("style","height:"+(scatterHeight*.8)+"px") }))
     
 	document.querySelectorAll("div.triggerText > div.sectionText").forEach(
 		(section) => {
-			var topBotMargin = (section.parentNode.clientHeight-section.clientHeight)/2;
+			var topBotMargin = 30;//(section.parentNode.clientHeight-section.clientHeight)/2;
 			section.setAttribute("style","margin-top:"+(topBotMargin)+"px;margin-bottom:"+(topBotMargin)+"px;")
 		}
 	);
@@ -70,10 +70,10 @@ function init() {
 		showConforming();
 		showRegressionLine();
 		setScatterTitle("A Common Thread")
-		showAdhocLabel('LUX',['gdp','tb'],[0,7],600)
-		showAdhocLabel('USA',['gdp','tb'],[0,7],600)
-		showAdhocLabel('SOM',['gdp','tb'],[-60,7],600)
-		showAdhocLabel('CAF',['gdp','tb'],[-64,-7],600)
+		showAdhocLabel('LUX',[],[0,7],1200)
+		showAdhocLabel('USA',[],[0,7],2400)
+		showAdhocLabel('SOM',[],[-60,7],600)
+		showAdhocLabel('CAF',[],[-64,-7],1800)
 	}
 	var showSection3 = function(){
 		clearFilterSet();
@@ -123,12 +123,13 @@ function init() {
 		
 		setScatterTitle("Regional Differences - East Asia & Pacific")
 		updateFilterSet("region","eap");
-		showAdhocLabel('PHL',['gdp','tb'],[0,-20],600)
-		showAdhocLabel('MMR',['gdp','tb'],[-70,10],1200)
-		showAdhocLabel('TON',['gdp','tb'],[0,10],1800)
-		showAdhocLabel('AUS',['gdp','tb'],[0,10],2400)
-		showAdhocLabel('JPN',['gdp','tb'],[0,10],3000)
-		showAdhocLabel('MAC',['gdp','tb'],[0,10],3600)
+		
+		showAdhocLabel('SGP',['gdp','tb'],[0,10],300)
+		showAdhocLabel('PHL',['gdp','tb'],[0,-20],1800)
+		showAdhocLabel('MMR',['gdp','tb'],[-70,10],2400)
+		showAdhocLabel('TON',['gdp','tb'],[0,10],3000)
+		showAdhocLabel('AUS',['gdp','tb'],[0,10],3600)
+		showAdhocLabel('JPN',['gdp','tb'],[0,10],4200)
 	}
 	var showSection8 = function(){
 		clearFilterSet();
@@ -198,7 +199,7 @@ function init() {
 			}
 			,{
 				root: null,
-				threshold: 1.0,
+				threshold: .5,
 				//rootMargin:"-"+(scatterHeight/2)+"px"
 			}
 		)
