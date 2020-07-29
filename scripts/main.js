@@ -18,14 +18,9 @@ function init() {
 
     document.querySelector(".vizText").setAttribute("style","height:"+(scatterHeight)+"px");
     
-//    document.querySelectorAll("div.triggerText").forEach((trig => { trig.setAttribute("style","height:"+(scatterHeight*.8)+"px") }))
-    
-	document.querySelectorAll("div.triggerText > div.sectionText").forEach(
-		(section) => {
-			var topBotMargin = 30;//(section.parentNode.clientHeight-section.clientHeight)/2;
-			section.setAttribute("style","margin-top:"+(topBotMargin)+"px;margin-bottom:"+(topBotMargin)+"px;")
-		}
-	);
+	var exploreSec = document.querySelector("#section9");
+	var exploreSecTopBotMargin = (scatterHeight-exploreSec.clientHeight)/2;
+	exploreSec.setAttribute("style","margin-top:"+(exploreSecTopBotMargin)+"px;margin-bottom:"+(exploreSecTopBotMargin)+"px;")
     
     /*
      * attach listeners to controls in "Explore"
@@ -199,8 +194,8 @@ function init() {
 			}
 			,{
 				root: null,
-				threshold: .5,
-				//rootMargin:"-"+(scatterHeight/2)+"px"
+				threshold: 1,
+				rootMargin:"-30px"
 			}
 		)
 	sections.forEach(section => {

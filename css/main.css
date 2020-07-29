@@ -29,7 +29,9 @@ p {  font-size: 18px; font-style: normal; font-variant: normal; font-weight: 400
 .blockquote { font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; }
 .pre {  font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5714px; }
 
-
+#sel-country {
+	min-width: 185px;
+}
 
 text.guide{ font-size: 10px; }
 
@@ -88,8 +90,11 @@ text.guide{ font-size: 10px; }
 }
 .sectionText {
 	display: inline-block;
+    margin-top: 30px;
+    margin-bottom: 30px;
 	margin-left: 50px;
     margin-right: 50px;
+/*     min-height: 400px; */
 }
 .formSection {
 	/* border: 1px solid lightgrey; */
