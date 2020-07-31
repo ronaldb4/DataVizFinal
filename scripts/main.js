@@ -86,7 +86,7 @@ function init() {
 		setScatterTitle("Outliers");
 		setScatterSubTitle("");
 		addAnnotations([
-			{ data: yearDataByCountryCode['BFA'], position: [-60,50] },
+			{ data: yearDataByCountryCode['BFA'], position: [-150,0] },
 			{ data: yearDataByCountryCode['GAB'], position: [150,20] },
 			{ data: yearDataByCountryCode['DMA'], position: [-150,-20] },
 			{ data: yearDataByCountryCode['SGP'], position: [60,-30] }
@@ -118,7 +118,7 @@ function init() {
 		setScatterSubTitle("Income Variations");
 		colorTbBins([5,6,7]);
 		addAnnotations([
-			{ data: yearDataByCountryCode['BFA'], position: [-60,50] },
+			{ data: yearDataByCountryCode['BFA'], position: [-150,0] },
 			{ data: yearDataByCountryCode['SGP'], position: [60,-30] }
 		])
 	}
@@ -148,7 +148,7 @@ function init() {
 		addLineAnnotations(
 				"Sub-Saharan Africa",
 				["The relationship between Income and TB is","far weaker than global"], 
-				{x: -100, y: -50 });
+				{x: -100, y: -60 });
 	}
 	var showSection9 = function(){
 		removeOrientingLabels();
@@ -293,11 +293,11 @@ function myAnnotationBuilder(configArr){
 					maxWidth = sub.node().getBBox().width;
 				totHeight += sub.node().getBBox().height;
 			}
-		var adj = 10;
-		var topLeft = [config.x+config.dx-adj , config.y+config.dy - title.node().getBBox().height ];
-		var topRight = [topLeft[0] + maxWidth+adj , topLeft[1] ]
-		var bottomLeft = [topLeft[0] , topLeft[1]+totHeight+adj ]
-		var bottomRight = [topLeft[0] + maxWidth + adj, topLeft[1]+totHeight+adj ]
+		var adj = 5;
+		var topLeft = [config.x+config.dx-adj , config.y+config.dy - title.node().getBBox().height + adj/2];
+		var bottomLeft =  [topLeft[0] , topLeft[1]+totHeight+adj ]
+		var topRight =    [(config.x+config.dx) + maxWidth + adj, topLeft[1] ]
+		var bottomRight = [(config.x+config.dx) + maxWidth + adj, topLeft[1]+totHeight+adj ]
 		
 		var midTop   = [ topLeft[0] + (topRight[0]-topLeft[0])/2, topLeft[1] ]
 		var midLeft  = [ topLeft[0], topLeft[1]+(bottomLeft[1]-topLeft[1])/2 ]
