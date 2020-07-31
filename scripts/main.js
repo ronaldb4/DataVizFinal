@@ -172,7 +172,7 @@ function init() {
 		    	.attr("id","hoverHint")
 		        .attr("x", x+5)
 		        .attr("y", y-3)
-		        .attr("class","tooltip")
+		        .attr("class","tooltip guideEl")
 		        .style("pointer-events", "none")
 		        .style("opacity",0)
 		        .style("font-style","italic")
