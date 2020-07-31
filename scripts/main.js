@@ -236,7 +236,7 @@ function init() {
      * create the SVG and axes
      */
     buildPlotSpace();
-	addAxes(); //showYear(years[years.length-2]);
+	addAxes();
 }
 
 function addLineAnnotations(region, description, offset){
@@ -465,7 +465,6 @@ function updateFilterSet(type, value){
 							;
 		for (var idx=0 ; idx<filterSet.countryCode.length; idx++)
 			showGuide({ data: yearDataByCountryCode[filterSet.countryCode[idx]] });
-//			showAdhocLabel(filterSet.countryCode[idx])
 	}
 }
 
@@ -473,14 +472,6 @@ function updateFilterSet(type, value){
 /*
  *  utility functions 
  */
-function showYear(data){
-	loadYear(data) ; 
-	showRegressionLine(); 
-	showScatter(); 
-	showConforming(); 
-	addPopovers()
-}
-
 function calcAxisVal(logMethod, d, src, zeroVal){
   if (d[src]===null)
     return zeroVal;
@@ -892,7 +883,6 @@ function showOrientingLabels(region){
         				.remove();
 	}
 }
-
 function removeOrientingLabels(){
 	d3.selectAll(".orient-label").remove();
 }
