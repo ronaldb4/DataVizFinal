@@ -131,7 +131,11 @@ function init() {
 		setScatterTitle("East Asia & Pacific")
 		addLineAnnotations(
 				"East Asia & Pacific",
-				["The relationship between Income and TB is slightly weaker than global,","but the overall incidence is higher"], 
+				[
+					"Thhe overall incidence is higher for the region. This provides",
+					"one possible explanation for the relatively high TB incidences",
+					"of some wealthier countries in region"
+				], 
 				{x: -200, y: -160 });
 		setScatterSubTitle("Regional Differences");
 		updateFilterSet("region","eap");
@@ -147,7 +151,10 @@ function init() {
 		updateFilterSet("region","ssa");
 		addLineAnnotations(
 				"Sub-Saharan Africa",
-				["The relationship between Income and TB is","far weaker than global"], 
+				[
+					"The relationship between Income and TB is far",
+					"weaker for the region than is the global norm"
+				], 
 				{x: -100, y: -60 });
 	}
 	var showSection9 = function(){
