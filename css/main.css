@@ -4,6 +4,17 @@ html, button, input, select, textarea, text
     font-family: "Bodoni MT", Didot, "Didot LT STD", "Hoefler Text", Garamond, "Times New Roman", serif;
 }
 
+text.annotation-note-title {
+	font-size: 12px;
+}
+text.annotation-note-label {
+	font-size: 10px;
+}
+
+.orient-label {
+	font-size: 10px;
+}
+
 .container {
 	margin:auto;
 }
@@ -72,7 +83,11 @@ text.guide{ font-size: 10px; }
 	margin:auto;
 }
 
-.tooltip, .adhoc-tooltip {
+.guideText {
+	font-size: 12px;
+}
+
+.tooltip {
 	fill: black;
 	font-size: 12px;
 	background-color: white;

@@ -4,7 +4,7 @@
 var scatterHeight = 600;
 var scatterWidth = 600;
 var filterSet = {};
-var showTooltipHint = true;
+var showGuideHint = true;
 
 'use strict';
 function init() {
@@ -45,109 +45,134 @@ function init() {
 		removeRegionTrend();
 		removeColor();
 		removePopovers();
-		removeAdhocLabels();
-		hideTooltip();
+		hideGuide(null,true);
+		removeAnnotations();
 		
 		showScatter();
-		setScatterTitle("Tuberculosis Incidence vs. GDP")
+		setScatterTitle("Tuberculosis Incidence and GDP")
+		setScatterSubTitle("");
 		
-		tempDisplay();
+		showOrientingLabels();
 	}
 	var showSection2 = function(){
+		removeOrientingLabels();
+		
 		d3.select("#scrollPrompt").remove();
 		clearFilterSet();
 		removeRegionTrend();
 		removePopovers();
-		removeAdhocLabels();
-		hideTooltip();
+		hideGuide(null,true);
 		
-//		loadYear(baseYear);
 		showConforming();
 		showRegressionLine();
 		setScatterTitle("A Common Thread")
-		showAdhocLabel('LUX',[],[0,7],1200)
-		showAdhocLabel('USA',[],[0,7],2400)
-		showAdhocLabel('SOM',[],[-60,7],600)
-		showAdhocLabel('CAF',[],[-64,-7],1800)
+		setScatterSubTitle("");
+		
+		addAnnotations([
+				{ data: yearDataByCountryCode['LUX'], position: [0,-100] },
+				{ data: yearDataByCountryCode['USA'], position: [-20,50] },
+				{ data: yearDataByCountryCode['SOM'], position: [-20,100] },
+				{ data: yearDataByCountryCode['CAF'], position: [20,-20] }
+			])
 	}
 	var showSection3 = function(){
+		removeOrientingLabels();
 		clearFilterSet();
 		removeRegionTrend();
 		removePopovers();
-		removeAdhocLabels();
-		hideTooltip();
-		
+		hideGuide(null,true);
+				
 		showOutliers();
 		setScatterTitle("Outliers");
-		showAdhocLabel('BFA',[],[-85,7],600)
-		
-		showAdhocLabel('GAB',[],[0,10],1200)
-		showAdhocLabel('DMA',[],[0,10],1800)
-		
-		showAdhocLabel('SGP',[],[0,10],2400)
+		setScatterSubTitle("");
+		addAnnotations([
+			{ data: yearDataByCountryCode['BFA'], position: [-60,50] },
+			{ data: yearDataByCountryCode['GAB'], position: [150,20] },
+			{ data: yearDataByCountryCode['DMA'], position: [-100,-20] },
+			{ data: yearDataByCountryCode['SGP'], position: [60,-30] }
+		])
 	}
 	var showSection4 = function(){
+		removeOrientingLabels();
 		clearFilterSet();
 		removeRegionTrend();
 		removePopovers();
-		removeAdhocLabels();
-		hideTooltip();
+		hideGuide(null,true);
 		
-		setScatterTitle("TB Incidence Variations - Middle Income Countries")
+		setScatterTitle("Middle Income Countries")
+		setScatterSubTitle("TB Incidence Variations");
 		colorGdpBins([4,5,6,7]);
-		showAdhocLabel('GAB',['gdp','tb'],[0,10],300)
-		showAdhocLabel('DMA',['gdp','tb'],[0,10],600)
+		addAnnotations([
+			{ data: yearDataByCountryCode['GAB'], position: [150,20] },
+			{ data: yearDataByCountryCode['DMA'], position: [-100,-20] },
+		])
 	}
 	var showSection6 = function(){
+		removeOrientingLabels();
 		clearFilterSet();
 		removeRegionTrend();
 		removePopovers();
-		removeAdhocLabels();
-		hideTooltip();
+		hideGuide(null,true);
 		
-		setScatterTitle("Income Variations - Middle TB Incidence Countries")
+		setScatterTitle("Middle TB Incidence Countries")
+		setScatterSubTitle("Income Variations");
 		colorTbBins([5,6,7]);
-		showAdhocLabel('SGP',['gdp','tb'],[0,10],600)
-		showAdhocLabel('BFA',['gdp','tb'],[-85,5],300)
+		addAnnotations([
+			{ data: yearDataByCountryCode['BFA'], position: [-60,50] },
+			{ data: yearDataByCountryCode['SGP'], position: [60,-30] }
+		])
 	}
 	var showSection7 = function(){
+		removeOrientingLabels();
 		clearFilterSet();
 		removePopovers();
-		removeAdhocLabels();
-		hideTooltip();
+		hideGuide(null,true);
 		
-		setScatterTitle("Regional Differences - East Asia & Pacific")
+		setScatterTitle("East Asia & Pacific")
+		addLineAnnotations(
+				"East Asia & Pacific",
+				"The relationship between Income and TB is slightly weaker than global, but the overall incidence is higher", 
+				{x: 20, y: -80 });
+		setScatterSubTitle("Regional Differences");
 		updateFilterSet("region","eap");
+//		addAnnotations([
+//			{ data: yearDataByCountryCode['SGP'], position: [60,-30] },
+//			{ data: yearDataByCountryCode['PHL'], position: [150,20] },
+//			{ data: yearDataByCountryCode['TON'], position: [-50,30] }
+//		])
 		
-		showAdhocLabel('SGP',['gdp','tb'],[0,10],300)
-		showAdhocLabel('PHL',['gdp','tb'],[0,-20],1800)
-		showAdhocLabel('MMR',['gdp','tb'],[-70,10],2400)
-		showAdhocLabel('TON',['gdp','tb'],[0,10],3000)
-		showAdhocLabel('AUS',['gdp','tb'],[0,10],3600)
-		showAdhocLabel('JPN',['gdp','tb'],[0,10],4200)
 	}
 	var showSection8 = function(){
+		removeOrientingLabels();
 		clearFilterSet();
 		removePopovers();
-		hideTooltip();
+		hideGuide(null,true);
 		
-		setScatterTitle("Regional Differences - Sub-Saharan Africa");
+		setScatterTitle("Sub-Saharan Africa");
+		setScatterSubTitle("Regional Differences");
 		updateFilterSet("region","ssa");
-		showAdhocLabel('LSO',['gdp','tb'],[0,-20],600)
-		showAdhocLabel('BDI',['gdp','tb'],[-55,7],1200)
-		showAdhocLabel('SYC',['gdp','tb'],[0,10],1800)
-		showAdhocLabel('GNQ',['gdp','tb'],[0,10],2400)
-		showAdhocLabel('SDN',['gdp','tb'],[0,-20],3000)
+		addLineAnnotations(
+				"Sub-Saharan Africa",
+				"The relationship between Income and TB is far weaker than global", 
+				{x: 20, y: -20 });
+//		addAnnotations([
+//			{ data: yearDataByCountryCode['GAB'], position: [150,20] },
+//			{ data: yearDataByCountryCode['BDI'], position: [-20,40] },
+//		])
+
 	}
 	var showSection9 = function(){
+		removeOrientingLabels();
 		clearFilterSet();
+		removeAnnotations();
 		
 		setScatterTitle("Explore")
+		setScatterSubTitle("");
 		colorByRegion();
 		addPopovers();
 		loadCountries();
-		if (showTooltipHint){
-			showTooltip({data:{"countryCode":"EGY","name":"Egypt","region":"Middle East & North Africa","tb":13,"tbBin":4,"gdp":2440.5103,"gdpBin":4,"popDensity":96.883415,"distance":112.71968904183858,"conforming":false,"outlier":true}})
+		if (showGuideHint){
+			showGuide({data:yearDataByCountryCode['EGY']})
 		    var element = d3.selectAll("#EGY");
 		    var x = +element.attr("cx") - 190,
 		        y = +element.attr("cy") + 40;
@@ -155,6 +180,7 @@ function init() {
 		    //populate tooltip and show
 		    d3.select("#scatterBody")
 		    	.append("text")
+		    	.attr("id","hoverHint")
 		        .attr("x", x+5)
 		        .attr("y", y-3)
 		        .attr("class","tooltip")
@@ -164,7 +190,7 @@ function init() {
 		        .text("hover over country for guides")
 		        .transition().delay(600)
 		        .style("opacity",0.8);
-
+		    
 		}
 	}
 
@@ -209,6 +235,68 @@ function init() {
 	addAxes(); //showYear(years[years.length-2]);
 }
 
+function addLineAnnotations(region, description, offset){
+    var regionYear = [];
+    for (var idx=0; idx<yearData.length; idx++)
+    	if (yearData[idx].region==region)
+    		regionYear[regionYear.length] = yearData[idx];
+    
+    var regressionLine = ss.linearRegressionLine(ss.linearRegression(
+    		regionYear.map((d) =>  { return [
+		        calcAxisVal(yearXaxisScale, d, "gdp", 0),
+		        calcAxisVal(yearYaxisScale, d, "tb", 0)
+		    ];}
+    	)));
+
+    var x = xExtents[1]-100;
+    var y = regressionLine(x);
+    
+    var annotations = [];
+    annotations[annotations.length] = {
+	    	note: {
+	    		align: "middle",
+	    		title: region,
+	    		label: description,    		
+//	    		wrapSplitter: /\n/
+	    	},
+	    	x: x,
+	    	y: y,
+	    	dx: offset.x,
+	    	dy: offset.y
+	    }
+
+    d3.select("#annotations").call(d3.annotation().annotations(annotations));
+}
+
+function addAnnotations(config){
+	var annotations = [];
+	for (var idx=0; idx<config.length;idx++){
+		var data = config[idx].data;
+		
+	    var element = d3.selectAll("#"+data.countryCode);
+	    var x = +element.attr("cx"),
+	        y = +element.attr("cy");
+		
+	    annotations[annotations.length] = {
+	    	note: {
+	    		align: "middle",
+	    		title: data.name,
+	    		label: data.tb + ' cases per 100,000\n$'+d3.format(",.3r")(data.gdp)+' per capita',    		
+	    		wrapSplitter: /\n/
+	    	},
+	    	x: x,
+	    	y: y,
+	    	dx: config[idx].position[0],
+	    	dy: config[idx].position[1]
+	    }
+	}
+
+    d3.select("#annotations").call(d3.annotation().annotations(annotations));
+}
+function removeAnnotations(){
+	d3.select("#annotations").selectAll("g").remove();
+}
+
 function clearFilterSet(){
 	filterSet = {
 			region : [],
@@ -222,7 +310,7 @@ function clearFilterSet(){
 	d3.selectAll('.countryCode-filter').property('selected', false);
 	
 	removeRegionTrend();
-	removeAdhocLabels();
+	hideGuide(null,true);
 }
 
 function updateFilterSet(type, value){
@@ -234,12 +322,8 @@ function updateFilterSet(type, value){
 		})
 		for (var idx=0 ; idx<filterSet.countryCode.length; idx++)
 			if (!selectedCountryCodes.includes(filterSet.countryCode[idx]))
-				removeAdhocLabels(filterSet.countryCode[idx]);
+				hideGuide({ data: yearDataByCountryCode[filterSet.countryCode[idx]] },true);
 		
-		for (var idx=0 ; idx<selectedCountryCodes.length; idx++)
-			if (!filterSet.countryCode.includes(selectedCountryCodes[idx]))
-				showAdhocLabel(selectedCountryCodes[idx],['gdp','tb'])
-
 		filterSet.countryCode = selectedCountryCodes;
 	}
 	else {
@@ -258,28 +342,31 @@ function updateFilterSet(type, value){
 	if (filterSet.region.length==0 && filterSet.tb.length==0 && filterSet.gdp.length==0 && filterSet.countryCode.length==0){
 		colorByRegion();
 		removeRegionTrend();
-		removeAdhocLabels();
+		hideGuide(null,true);
 	}
 	else {
-		setScatterColor(   (d)=>{
-			var show = (
-				filterSet.region.includes(regionMap[d.region]) || 
-				filterSet.gdp.includes(gdpGroupMap[d.gdpBin]) || 
-				filterSet.tb.includes(tbGroupMap[d.tbBin]) ||
-				filterSet.countryCode.includes(d.countryCode)
-			);
-			return show ? "region-"+regionMap[d.region] : "dull" ; 
-		})
-		.style("r", (d)=>{ 
-			var show = (
-					filterSet.region.includes(regionMap[d.region]) || 
-					filterSet.gdp.includes(gdpGroupMap[d.gdpBin]) || 
-					filterSet.tb.includes(tbGroupMap[d.tbBin]) ||
-					filterSet.countryCode.includes(d.countryCode)
-				);
-			return show ? "4" : null; 
-		})
-		;
+		setScatterColor( (d)=>{
+								var show = (
+									filterSet.region.includes(regionMap[d.region]) || 
+									filterSet.gdp.includes(gdpGroupMap[d.gdpBin]) || 
+									filterSet.tb.includes(tbGroupMap[d.tbBin]) ||
+									filterSet.countryCode.includes(d.countryCode)
+								);
+								return show ? "region-"+regionMap[d.region] : "dull" ; 
+							})
+				.style("r", (d)=>{ 
+								var show = (
+										filterSet.region.includes(regionMap[d.region]) || 
+										filterSet.gdp.includes(gdpGroupMap[d.gdpBin]) || 
+										filterSet.tb.includes(tbGroupMap[d.tbBin]) ||
+										filterSet.countryCode.includes(d.countryCode)
+									);
+								return show ? "4" : null; 
+							})
+							;
+		for (var idx=0 ; idx<filterSet.countryCode.length; idx++)
+			showGuide({ data: yearDataByCountryCode[filterSet.countryCode[idx]] });
+//			showAdhocLabel(filterSet.countryCode[idx])
 	}
 }
 
@@ -449,6 +536,9 @@ function buildPlotSpace(){
 	svg.append("g").attr("transform", "translate(50,50)")
 		.attr("id","regLinearRegressionLine")
 
+	svg.append("g").attr("transform", "translate(50,50)")
+		.attr("id","annotations")
+
 }
 
 function removeAxes(){
@@ -588,11 +678,6 @@ function colorTbBins(bins){
 		.style("fill", (d)=>{ return bins.includes(d.tbBin) ? divergingColorDistance(d.distance) : null;	});
 }
 
-//function colorRegion(region){
-//	setScatterColor((d)=>{ return (region == d.region) ? "region-"+regionMap[d.region] : "dull" ; })
-//		.style("r", (d)=>{ return (region == d.region) ? "4" : null; } );;
-//}
-
 function colorByRegion() {
 	setScatterColor((d)=>{return "region-"+regionMap[d.region]; });
 }
@@ -603,6 +688,9 @@ function setScatterColor(colorFunc){
 function setScatterTitle(text){
 	d3.select("#scatterTitle").text(text);
 }
+function setScatterSubTitle(text){
+	d3.select("#scatterSubTitle").text(text);
+}
 
 function showScatter() {
     //remove existing circles
@@ -612,9 +700,15 @@ function showScatter() {
     d3.select("#scatterBody").append("text")
         .attr("class","h2")
         .attr("id", "scatterTitle")
-        .attr("transform", "translate(" + (scatterWidth/2) + ",0)")
-        .style("text-anchor", "middle")
-        .text(currentYear);
+	    .attr("transform", "translate(" + ((scatterWidth-100)/2) + ",0)")
+        .style("text-anchor", "middle");
+    
+    d3.select("#scatterBody").append("text")
+	    .attr("class","h4")
+	    .attr("id", "scatterSubTitle")
+	    .attr("transform", "translate(" + ((scatterWidth-100)/2) + ",20)")
+	    .style("text-anchor", "middle");
+    
     
     d3.select("#scatterBody").selectAll("circle")
         .data(yearData)
@@ -653,8 +747,8 @@ function addPopovers() {
                     .style("fill", "none")
                     .style("pointer-events", "all")
                     .attr("d", (d,i) => { return (d==null) ? "M0,0Z" : "M" + d.join("L") + "Z"; })
-                    .on("mouseover", showTooltip)
-                    .on("mouseout",  hideTooltip);
+                    .on("mouseover", showGuide)
+                    .on("mouseout",  () => { hideGuide(null,false); });
 }
 
 function loadCountries(){
@@ -672,11 +766,10 @@ function loadCountries(){
 	}
 }
 
-function tempDisplay(){
+function showOrientingLabels(region){
 	var delayIdx = 0;
 	for (var idx=0;idx<yearData.length;idx++){
 	    var element = d3.selectAll("#"+yearData[idx].countryCode);
-	    
 	    var x = +element.attr("cx"),
 	        y = +element.attr("cy")
 		
@@ -684,10 +777,10 @@ function tempDisplay(){
 	    
 	    d3.select("#scatterBody")
     	.append("text")
-        .attr("id", countries[idx].countryCode+"-adhoc-tooltip")
+        .attr("id", countries[idx].countryCode+"-orient-label")
         .attr("x", x+5)
         .attr("y", y-3)
-        .attr("class","adhoc-tooltip")
+        .attr("class","orient-label")
         .style("pointer-events", "none")
         .style("opacity",0)
         .text(yearData[idx].name)
@@ -699,133 +792,104 @@ function tempDisplay(){
 	}
 }
 
-function showAdhocLabel(countryCode, labels, shift, delay){
-    //get location info for tooltip
-    var element = d3.selectAll("#"+countryCode);
-    var x = +element.attr("cx"),
-        y = +element.attr("cy"),
-        color = element.style("fill");
-    
-    if (shift != undefined){
-    	x += shift[0];
-    	y += shift[1];
-    }
-    if (delay==undefined)
-    	delay=300;
-    
-    //populate tooltip and show
-    d3.select("#scatterBody")
-    	.append("text")
-        .attr("id", countryCode+"-adhoc-tooltip")
-        .attr("x", x+5)
-        .attr("y", y-3)
-        .attr("class","adhoc-tooltip")
-        .style("pointer-events", "none")
-        .style("opacity",0)
-        .text(yearDataByCountryCode[countryCode].name)
-        .transition().delay(delay)
-        .style("opacity",1.0);
-    
-    if (labels.includes('gdp'))
-	    d3.select("#"+countryCode+"-adhoc-tooltip")
-	        .append("tspan")
-	        .attr("x", x+5)
-	        .attr("dy", "1em")
-	        .text("GDP: " + d3.format(",.0f")(yearDataByCountryCode[countryCode].gdp) )
-	    ;
-    
-    if (labels.includes('tb'))
-	    d3.select("#"+countryCode+"-adhoc-tooltip")
-		    .append("tspan")
-	        .attr("x", x+5)
-	        .attr("dy", "1em")
-		    .text("TB: " + yearDataByCountryCode[countryCode].tb)
-		;
-
+function removeOrientingLabels(){
+	d3.selectAll(".orient-label").remove();
 }
 
-function removeAdhocLabels(countryCode){
-	if (countryCode==null)
-		d3.selectAll(".adhoc-tooltip").remove();
-	else
-		d3.select("#"+countryCode+"-adhoc-tooltip").remove();
-}
-
-function showTooltip(d) {
-	showTooltipHint = false;
-    d3.selectAll(".guideWrapper").selectAll("line").remove();
-    d3.selectAll(".guideWrapper").selectAll("text").remove();
-    d3.selectAll(".tooltip").remove();
+function showGuide(d) {
+	showGuideHint = false;
+	hideGuide();
+	d3.select("#hoverHint").transition().delay(500).style("opacity",0).remove()
 	
-    //get location info for tooltip
-    var element = d3.selectAll("#"+d.data.countryCode);
-    var x = +element.attr("cx"),
-        y = +element.attr("cy"),
-        color = element.style("fill");
-    
-    if (color == "#FFFFFF" || color == "rgb(255, 255, 255)")
-    	color = "lightgrey";
-    
     //populate tooltip and show
-    if(d3.select("#"+d.data.countryCode+"-adhoc-tooltip").empty())
+    if(d3.select("#"+d.data.countryCode+"-guide").empty()){
+	    //get location info for tooltip
+	    var element = d3.selectAll("#"+d.data.countryCode);
+	    var x = +element.attr("cx"),
+	        y = +element.attr("cy");
+	    
+//	    var color = element.style("fill");
+//	    if (color == "#FFFFFF" || color == "rgb(255, 255, 255)")
+	    var	color = "lightgrey";
+	    
 	    d3.select("#scatterBody").append("text")
-	        .attr("id", d.data.countryCode+"-tooltip")
-	        .attr("class","guideToolTip")
+	        .attr("id", d.data.countryCode+"-guide")
+	        .attr("countryCode",d.data.countryCode)
+	        .attr("selected",filterSet.countryCode.includes(d.data.countryCode))
+	        .attr("class","guideEl guideText")
 	        .attr("x", x+3)
 	        .attr("y", y-3)
-	        .attr("class","tooltip")
 	        .text(d.data.name)
 	        .style("pointer-events", "none")
 	        .style("opacity",0)
 	        .transition().duration(300)
 	        .style("opacity", 1);
 
-    //draw guidelines
-    var wrapper = d3.selectAll(".guideWrapper");
-    //vertical line
-    wrapper.append("line").attr("class", "guide")
-        .attr("x1", x).attr("y1", y)
-        .attr("x2", x).attr("y2", scatterHeight-125)
-        .style("stroke", color)
-        .style("opacity",  0)
-        .transition().duration(200)
-        .style("opacity", 0.5);
-    //horizontal line
-    wrapper.append("line").attr("class", "guide")
-        .attr("x1", x).attr("y1", y)
-        .attr("x2", 30).attr("y2", y)
-        .style("stroke", color)
-        .style("opacity",  0)
-        .transition().duration(200)
-        .style("opacity", 1.0);
-
-    //write values on axis
-    //Value on the x-axis
-    wrapper.append("text").attr("class", "guide legend region-"+regionMap[d.data.region])
-        .attr("x", x)
-        .attr("y", scatterHeight-120)
-        .attr("dy", "0.71em")
-        //.style("color", "darkgrey")
-        .style("opacity",  0)
-        .style("text-anchor", "middle")
-        .text(d3.format(".2s")(d.data.gdp) )
-        .transition().duration(200)
-        .style("opacity", 0.5);
-
-    //Value on the y-axis
-    wrapper.append("text").attr("class", "guide legend region-"+regionMap[d.data.region])
-        .attr("x", 25).attr("y", y)
-        .attr("dy", "0.32em")
-        //.style("color", "darkgrey")
-        .style("background-color","white")
-        .style("opacity",  0)
-        .style("text-anchor", "end")
-        .text( d.data.tb )
-        .transition().duration(200)
-        .style("opacity", 1.0);
+	    //draw guidelines
+	    var wrapper = d3.selectAll(".guideWrapper");
+	    //vertical line
+	    wrapper.append("line").attr("class", "guideEl guide")
+	    	.attr("id",d.data.countryCode+"-xguide")
+	        .attr("countryCode",d.data.countryCode)
+	        .attr("selected",filterSet.countryCode.includes(d.data.countryCode))
+	        .attr("x1", x).attr("y1", y)
+	        .attr("x2", x).attr("y2", scatterHeight-125)
+	        .style("stroke", color)
+	        .style("opacity",  0)
+	        .transition().duration(200)
+	        .style("opacity", 0.5);
+	    //horizontal line
+	    wrapper.append("line").attr("class", "guideEl guide")
+	    	.attr("id",d.data.countryCode+"-yguide")
+	        .attr("countryCode",d.data.countryCode)
+	        .attr("selected",filterSet.countryCode.includes(d.data.countryCode))
+	        .attr("x1", x).attr("y1", y)
+	        .attr("x2", 30).attr("y2", y)
+	        .style("stroke", color)
+	        .style("opacity",  0)
+	        .transition().duration(200)
+	        .style("opacity", 1.0);
+	
+	    //write values on axis
+	    //Value on the x-axis
+	    wrapper.append("text").attr("class", "guideEl guide legend region-"+regionMap[d.data.region])
+	    	.attr("id",d.data.countryCode+"-xtext")
+	        .attr("countryCode",d.data.countryCode)
+	        .attr("selected",filterSet.countryCode.includes(d.data.countryCode))
+	        .attr("x", x)
+	        .attr("y", scatterHeight-120)
+	        .attr("dy", "0.71em")
+	        .style("opacity",  0)
+	        .style("text-anchor", "middle")
+	        .text(d3.format(".2s")(d.data.gdp) )
+	        .transition().duration(200)
+	        .style("opacity", 0.5);
+	
+	    //Value on the y-axis
+	    wrapper.append("text").attr("class", "guideEl guide legend region-"+regionMap[d.data.region])
+	    	.attr("id",d.data.countryCode+"-ytext")
+	        .attr("countryCode",d.data.countryCode)
+	        .attr("selected",filterSet.countryCode.includes(d.data.countryCode))
+	        .attr("x", 25).attr("y", y)
+	        .attr("dy", "0.32em")
+	        .style("background-color","white")
+	        .style("opacity",  0)
+	        .style("text-anchor", "end")
+	        .text( d.data.tb )
+	        .transition().duration(200)
+	        .style("opacity", 1.0);
+    }
 }
-function hideTooltip(d) {
-    d3.selectAll(".guideWrapper").selectAll("line").remove();
-    d3.selectAll(".guideWrapper").selectAll("text").remove();
-    d3.select(".tooltip").remove();
+
+function hideGuide(d,deselect) {
+	if (d == null){
+		if (deselect)
+			d3.selectAll(".guideEl").remove();
+		else
+			d3.selectAll(".guideEl[selected=false]").remove();
+	}
+	else if (deselect)
+	    d3.selectAll(".guideEl[countryCode="+d.data.countryCode+"]").remove();
+	else
+	    d3.selectAll(".guideEl[countryCode="+d.data.countryCode+"][selected=false").remove();
 }
