@@ -595,10 +595,32 @@ function addAxes(){
 }
 
 function removeRegressionLine(){
-    d3.select("#linearRegressionLine line")
-    .transition().duration(800).style("stroke-opacity",.0).on("end", function() {
-    	this.parentNode.remove();
-    });
+    d3.select("#linearRegressionLine line") //.remove();
+    .transition().duration(200).style("stroke-opacity",.0);
+}
+
+function showRegressionLine(){
+	if (!d3.select("#linearRegressionLine").empty()){
+	    d3.select("#linearRegressionLine line") //.remove();
+	    .transition().duration(1200).style("stroke-opacity",.8);
+		return;
+	}
+	
+    var regressionLine = ss.linearRegressionLine(regression);
+
+    var svg = d3.select("#plotSpace");
+    svg.append("g") .attr("transform", "translate(50,50)")
+        .attr("id","linearRegressionLine")
+        .append("line")
+        .style("stroke","lightgrey")
+        .style("stroke-width","2px")
+        .style("stroke-opacity",.0)
+        .attr("x1", xExtents[0])
+        .attr("y1", regressionLine(xExtents[0]))
+        .attr("x2", xExtents[1])
+        .attr("y2", regressionLine(xExtents[1]))
+        .transition().duration(1200).style("stroke-opacity",.8)
+    ;
 }
 
 function removeRegionTrend(region){
@@ -632,26 +654,6 @@ function showRegionTrend(region){
         .attr("x2", xExtents[1])
         .attr("y2", regressionLine(xExtents[1]))
         .transition().duration(1200).style("stroke-opacity",0.2)
-    ;
-}
-
-function showRegressionLine(){
-	removeRegressionLine();
-	
-    var regressionLine = ss.linearRegressionLine(regression);
-
-    var svg = d3.select("#plotSpace");
-    svg.append("g") .attr("transform", "translate(50,50)")
-        .attr("id","linearRegressionLine")
-        .append("line")
-        .style("stroke","lightgrey")
-        .style("stroke-width","2px")
-        .style("stroke-opacity",.0)
-        .attr("x1", xExtents[0])
-        .attr("y1", regressionLine(xExtents[0]))
-        .attr("x2", xExtents[1])
-        .attr("y2", regressionLine(xExtents[1]))
-        .transition().duration(1200).style("stroke-opacity",.8)
     ;
 }
 
