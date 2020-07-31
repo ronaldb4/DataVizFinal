@@ -1,4 +1,4 @@
-// significant borrowing and adaptation from https://www.visualcinnamon.com/2015/07/voronoi.html
+// inspiration and adaptation from https://www.visualcinnamon.com/2015/07/voronoi.html for the voronoi and the guidelines
 // simple-statistics.js library used for regression line calculation
 
 var scatterHeight = 600;
