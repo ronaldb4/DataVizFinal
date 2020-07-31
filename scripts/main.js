@@ -135,12 +135,6 @@ function init() {
 				{x: 20, y: -80 });
 		setScatterSubTitle("Regional Differences");
 		updateFilterSet("region","eap");
-//		addAnnotations([
-//			{ data: yearDataByCountryCode['SGP'], position: [60,-30] },
-//			{ data: yearDataByCountryCode['PHL'], position: [150,20] },
-//			{ data: yearDataByCountryCode['TON'], position: [-50,30] }
-//		])
-		
 	}
 	var showSection8 = function(){
 		removeOrientingLabels();
@@ -155,11 +149,6 @@ function init() {
 				"Sub-Saharan Africa",
 				"The relationship between Income and TB is far weaker than global", 
 				{x: 20, y: -20 });
-//		addAnnotations([
-//			{ data: yearDataByCountryCode['GAB'], position: [150,20] },
-//			{ data: yearDataByCountryCode['BDI'], position: [-20,40] },
-//		])
-
 	}
 	var showSection9 = function(){
 		removeOrientingLabels();
@@ -199,6 +188,18 @@ function init() {
 	 * set-up observer for modifying the scatter based on scroll
 	 */
 	const sections = document.querySelectorAll(".sectionText");
+	var threshold = 1;
+	var maxSectionHeight = -1;
+	sections.forEach(section => {
+		console.log(section)
+		if (section.clientHeight>maxSectionHeight)
+			maxSectionHeight = section.clientHeight;
+	})
+	maxSectionHeight+=60;
+	if (maxSectionHeight>scatterHeight)
+		threshold = scatterHeight/maxSectionHeight;
+	
+	console.log(maxSectionHeight + " vs. " + scatterHeight)
 	const sectionObserver = new IntersectionObserver(
 			function(entries, observer){
 				entries.forEach(entry => {
@@ -214,13 +215,11 @@ function init() {
 							case 'section9' : showSection9(); break; 
 						}
 					}
-//					else if (entry.target.id == 'section9')
-//						clearFilterSet();
 				})
 			}
 			,{
 				root: null,
-				threshold: 1,
+				threshold: threshold,
 				rootMargin:"-30px"
 			}
 		)
