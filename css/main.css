@@ -3,11 +3,28 @@ html, button, input, select, textarea, text
     /* Set your content font stack here: */
     font-family: "Bodoni MT", Didot, "Didot LT STD", "Hoefler Text", Garamond, "Times New Roman", serif;
 }
-
-text.annotation-note-title {
-	font-size: 12px;
+/* svg {
+    display: block;
+    margin: 0 auto;
 }
-text.annotation-note-label {
+ */
+ .annotation-fo {
+ 	pointer-events: none;
+ 	border: 1px black solid
+ }
+.annotation-contents, .annotation-contents-pre {
+	font-size:12px;
+	padding: 10px;
+	/* color: orange; */
+}
+.annotation-contents-pre {
+	visibility: hidden
+}
+
+.annotation-title {
+	font-size: 14px;
+}
+.annotation-label {
 	font-size: 10px;
 }
 

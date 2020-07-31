@@ -69,10 +69,10 @@ function init() {
 		setScatterSubTitle("");
 		
 		addAnnotations([
-				{ data: yearDataByCountryCode['LUX'], position: [0,-100] },
+				{ data: yearDataByCountryCode['LUX'], position: [-10,-100] },
 				{ data: yearDataByCountryCode['USA'], position: [-20,50] },
-				{ data: yearDataByCountryCode['SOM'], position: [-20,100] },
-				{ data: yearDataByCountryCode['CAF'], position: [20,-20] }
+				{ data: yearDataByCountryCode['SOM'], position: [-30,100] },
+				{ data: yearDataByCountryCode['CAF'], position: [70,-20] }
 			])
 	}
 	var showSection3 = function(){
@@ -88,7 +88,7 @@ function init() {
 		addAnnotations([
 			{ data: yearDataByCountryCode['BFA'], position: [-60,50] },
 			{ data: yearDataByCountryCode['GAB'], position: [150,20] },
-			{ data: yearDataByCountryCode['DMA'], position: [-100,-20] },
+			{ data: yearDataByCountryCode['DMA'], position: [-150,-20] },
 			{ data: yearDataByCountryCode['SGP'], position: [60,-30] }
 		])
 	}
@@ -104,7 +104,7 @@ function init() {
 		colorGdpBins([4,5,6,7]);
 		addAnnotations([
 			{ data: yearDataByCountryCode['GAB'], position: [150,20] },
-			{ data: yearDataByCountryCode['DMA'], position: [-100,-20] },
+			{ data: yearDataByCountryCode['DMA'], position: [-150,-20] },
 		])
 	}
 	var showSection6 = function(){
@@ -131,8 +131,8 @@ function init() {
 		setScatterTitle("East Asia & Pacific")
 		addLineAnnotations(
 				"East Asia & Pacific",
-				"The relationship between Income and TB is slightly weaker than global, but the overall incidence is higher", 
-				{x: 20, y: -80 });
+				["The relationship between Income and TB is slightly weaker than global,","but the overall incidence is higher"], 
+				{x: -200, y: -160 });
 		setScatterSubTitle("Regional Differences");
 		updateFilterSet("region","eap");
 	}
@@ -147,8 +147,8 @@ function init() {
 		updateFilterSet("region","ssa");
 		addLineAnnotations(
 				"Sub-Saharan Africa",
-				"The relationship between Income and TB is far weaker than global", 
-				{x: 20, y: -20 });
+				["The relationship between Income and TB is","far weaker than global"], 
+				{x: -100, y: -50 });
 	}
 	var showSection9 = function(){
 		removeOrientingLabels();
@@ -191,7 +191,6 @@ function init() {
 	var threshold = 1;
 	var maxSectionHeight = -1;
 	sections.forEach(section => {
-		console.log(section)
 		if (section.clientHeight>maxSectionHeight)
 			maxSectionHeight = section.clientHeight;
 	})
@@ -199,7 +198,6 @@ function init() {
 	if (maxSectionHeight>scatterHeight)
 		threshold = scatterHeight/maxSectionHeight;
 	
-	console.log(maxSectionHeight + " vs. " + scatterHeight)
 	const sectionObserver = new IntersectionObserver(
 			function(entries, observer){
 				entries.forEach(entry => {
@@ -255,8 +253,7 @@ function addLineAnnotations(region, description, offset){
 	    	note: {
 	    		align: "middle",
 	    		title: region,
-	    		label: description,    		
-//	    		wrapSplitter: /\n/
+	    		label: description
 	    	},
 	    	x: x,
 	    	y: y,
@@ -264,7 +261,102 @@ function addLineAnnotations(region, description, offset){
 	    	dy: offset.y
 	    }
 
-    d3.select("#annotations").call(d3.annotation().annotations(annotations));
+    myAnnotationBuilder(annotations);
+}
+
+function myAnnotationBuilder(configArr){
+	var annoSpace = d3.select("#annotations")
+
+	annoSpace.selectAll("g").remove();
+	
+	for (var idx=0; idx<configArr.length; idx++){
+		var subGroup = annoSpace.append("g");
+
+		var config = configArr[idx];
+		var title = 
+			subGroup.append("text")
+				.attr("x",config.x+config.dx)
+				.attr("y",config.y+config.dy)
+				.attr("class","annotation-title")
+				.text(config.note.title);
+		var maxWidth = title.node().getBBox().width;
+		var totHeight = title.node().getBBox().height;
+		
+		if (config.note.label)
+			for (var lidx=0; lidx<config.note.label.length;lidx++){
+				var sub = subGroup.append("text")
+					.attr("x",config.x+config.dx)
+					.attr("y",config.y+config.dy+((lidx+1)*11))
+					.attr("class","annotation-label")
+					.text(config.note.label[lidx]);	
+				if (sub.node().getBBox().width>maxWidth)
+					maxWidth = sub.node().getBBox().width;
+				totHeight += sub.node().getBBox().height;
+			}
+		var adj = 10;
+		var topLeft = [config.x+config.dx-adj , config.y+config.dy - title.node().getBBox().height ];
+		var topRight = [topLeft[0] + maxWidth+adj , topLeft[1] ]
+		var bottomLeft = [topLeft[0] , topLeft[1]+totHeight+adj ]
+		var bottomRight = [topLeft[0] + maxWidth + adj, topLeft[1]+totHeight+adj ]
+		
+		var midTop   = [ topLeft[0] + (topRight[0]-topLeft[0])/2, topLeft[1] ]
+		var midLeft  = [ topLeft[0], topLeft[1]+(bottomLeft[1]-topLeft[1])/2 ]
+		var midRight = [ topRight[0], topRight[1] + (bottomRight[1]-topRight[1])/2 ]
+		var midBottom= [ bottomLeft[0]+(bottomRight[0]-bottomLeft[0])/2, bottomRight[1] ]
+		
+		var topDist 	= euclidean([config.x, config.y],midTop);
+		var bottomDist	= euclidean([config.x, config.y],midBottom);
+		var leftDist 	= euclidean([config.x, config.y],midLeft);
+		var rightDist 	= euclidean([config.x, config.y],midRight);
+		
+		var connectorPt;
+		var decorPt1;
+		var decorPt2;
+		switch (Math.min(topDist,bottomDist,leftDist,rightDist)){
+			case topDist : 
+				connectorPt = midTop;
+				decorPt1 = topLeft;
+				decorPt2 = topRight;
+				break;
+			case bottomDist : 
+				connectorPt = midBottom;
+				decorPt1 = bottomLeft;
+				decorPt2 = bottomRight;
+				break;
+			case leftDist : 
+				connectorPt = midLeft;
+				decorPt1 = topLeft;
+				decorPt2 = bottomLeft;
+				break;
+			case rightDist : 
+				connectorPt = midRight;
+				decorPt1 = topRight;
+				decorPt2 = bottomRight;
+				break;
+		}
+		
+		//connector
+		subGroup.append("line")
+	        .style("stroke","lightgrey")
+	        .style("stroke-width","1px")
+	        .attr("x1", config.x)
+	        .attr("y1", config.y)
+	        .attr("x2", connectorPt[0])
+	        .attr("y2", connectorPt[1])
+
+	    //decor
+	    subGroup.append("line")
+	        .style("stroke","grey")
+	        .style("stroke-width","3px")
+	        .attr("x1", decorPt1[0])
+	        .attr("y1", decorPt1[1])
+	        .attr("x2", decorPt2[0])
+	        .attr("y2", decorPt2[1])
+	}
+}
+
+function euclidean(a, b){
+	return Math.sqrt(Math.pow(a[0]-b[0],2) + Math.pow(a[1]-b[1],2))
 }
 
 function addAnnotations(config){
@@ -280,8 +372,9 @@ function addAnnotations(config){
 	    	note: {
 	    		align: "middle",
 	    		title: data.name,
-	    		label: data.tb + ' cases per 100,000\n$'+d3.format(",.3r")(data.gdp)+' per capita',    		
-	    		wrapSplitter: /\n/
+	    		label: [
+	    			data.tb + ' cases per 100,000',
+	    			'$'+d3.format(",.3r")(data.gdp)+' per capita'],    		
 	    	},
 	    	x: x,
 	    	y: y,
@@ -290,7 +383,7 @@ function addAnnotations(config){
 	    }
 	}
 
-    d3.select("#annotations").call(d3.annotation().annotations(annotations));
+	myAnnotationBuilder(annotations);
 }
 function removeAnnotations(){
 	d3.select("#annotations").selectAll("g").remove();
@@ -511,7 +604,7 @@ function loadYear(tgtYear){
     }
     divergingColorDistance = d3.scaleSequential().domain([0,(maxDistance-outlierPt)/2+outlierPt]).interpolator(d3.interpolate("yellow","blue"));
     
-    console.log(numClose/yearData.length)
+//    console.log(numClose/yearData.length)
 }
 
 /*
