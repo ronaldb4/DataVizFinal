@@ -257,8 +257,8 @@ function addLineAnnotations(region, description, offset){
     
     var annotations = [];
     annotations[annotations.length] = {
+    		//yes, this looks a bit like the d3.annotations library - that's where I started, then noticed the prohibition - I kept the config
 	    	note: {
-	    		align: "middle",
 	    		title: region,
 	    		label: description
 	    	},
