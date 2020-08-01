@@ -21,15 +21,31 @@ html, button, input, select, textarea, text
 	visibility: hidden
 }
 
+.annotation-connector {
+	stroke: lightgrey;
+	stroke-width: 1px;
+}	        
+
+.annotation-decor-bar {
+     stroke: darkgrey;
+     stroke-width: 2px;
+}
+
 .annotation-title {
-	font-size: 14px;
+	font-size: 13px;
+	fill:#606060;
 }
 .annotation-label {
 	font-size: 10px;
+	fill:grey;
+}
+.annotation-fill {
+	fill: #f8f8f8;
 }
 
 .orient-label {
 	font-size: 10px;
+	fill: grey;
 }
 
 .container {
@@ -61,7 +77,7 @@ p {  font-size: 18px; font-style: normal; font-variant: normal; font-weight: 400
 	min-width: 185px;
 }
 
-text.guide{ font-size: 10px; }
+text.guide{ font-size: 10px; fill:grey }
 
 .region-eap, .region-eca, .region-lac, .region-mena, .region-na,
 .region-sa, .region-ssa    { 
@@ -102,6 +118,7 @@ text.guide{ font-size: 10px; }
 
 .guideText {
 	font-size: 12px;
+	fill: grey;
 }
 
 .tooltip {

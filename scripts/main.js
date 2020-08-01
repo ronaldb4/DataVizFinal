@@ -88,9 +88,9 @@ function init() {
 		setScatterSubTitle("");
 		addPointAnnotations([
 			{ data: yearDataByCountryCode['BFA'], position: [-150,0] },
-			{ data: yearDataByCountryCode['GAB'], position: [150,20] },
+			{ data: yearDataByCountryCode['GAB'], position: [70,10] },
 			{ data: yearDataByCountryCode['DMA'], position: [-150,-20] },
-			{ data: yearDataByCountryCode['SGP'], position: [60,-30] }
+			{ data: yearDataByCountryCode['SGP'], position: [55,-30] }
 		])
 	}
 	var showSection4 = function(){
@@ -104,7 +104,7 @@ function init() {
 		setScatterSubTitle("TB Incidence Variations");
 		highlightGdpBins([4,5,6,7]);
 		addPointAnnotations([
-			{ data: yearDataByCountryCode['GAB'], position: [150,20] },
+			{ data: yearDataByCountryCode['GAB'], position: [70,10] },
 			{ data: yearDataByCountryCode['DMA'], position: [-150,-20] },
 		])
 	}
@@ -120,7 +120,7 @@ function init() {
 		highlightTbBins([5,6,7]);
 		addPointAnnotations([
 			{ data: yearDataByCountryCode['BFA'], position: [-150,0] },
-			{ data: yearDataByCountryCode['SGP'], position: [60,-30] }
+			{ data: yearDataByCountryCode['SGP'], position: [55,-30] }
 		])
 	}
 	var showSection7 = function(){
@@ -893,6 +893,8 @@ function myAnnotationBuilder(configArr){
 	
 	for (var idx=0; idx<configArr.length; idx++){
 		var subGroup = annoSpace.append("g");
+		
+		var background = subGroup.append("rect")
 
 		var config = configArr[idx];
 		var title = 
@@ -957,10 +959,16 @@ function myAnnotationBuilder(configArr){
 				break;
 		}
 		
+		background
+	    	.attr("class","annotation-fill")
+	        .attr("x", topLeft[0])
+	        .attr("y", topLeft[1])
+	        .attr("height", bottomLeft[1]-topLeft[1])
+	        .attr("width", topRight[0]-topLeft[0])
+        
 		//connector
 		subGroup.append("line")
-	        .style("stroke","lightgrey")
-	        .style("stroke-width","1px")
+	    	.attr("class","annotation-connector")
 	        .attr("x1", config.x)
 	        .attr("y1", config.y)
 	        .attr("x2", connectorPt[0])
@@ -968,8 +976,7 @@ function myAnnotationBuilder(configArr){
 
 	    //decor
 	    subGroup.append("line")
-	        .style("stroke","grey")
-	        .style("stroke-width","3px")
+	    	.attr("class","annotation-decor-bar")
 	        .attr("x1", decorPt1[0])
 	        .attr("y1", decorPt1[1])
 	        .attr("x2", decorPt2[0])
