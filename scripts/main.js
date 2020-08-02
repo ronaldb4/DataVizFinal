@@ -1,6 +1,3 @@
-// the voronoi and the guidelines inspired by https://www.visualcinnamon.com/2015/07/voronoi.html
-// simple-statistics.js library used for regression line calculation
-
 var scatterHeight = 600;
 var scatterWidth = 600;
 var filterSet = {};
