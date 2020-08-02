@@ -70,7 +70,7 @@ function init() {
 				{ data: yearDataByCountryCode['LUX'], position: [-10,-100] },
 				{ data: yearDataByCountryCode['USA'], position: [-20,50] },
 				{ data: yearDataByCountryCode['SOM'], position: [-30,100] },
-				{ data: yearDataByCountryCode['CAF'], position: [70,-20] }
+				{ data: yearDataByCountryCode['CAF'], position: [-80,-45] }
 			])
 	}
 	var showSection3 = function(){
@@ -434,15 +434,15 @@ function buildPlotSpace(){
 	
 	var svg = d3.select("#scatterplot").append("svg").attr("id", "plotSpace").attr("height", scatterHeight).attr("width", scatterWidth)
 	
-	svg.append("g").attr("class", "guideWrapper")
-		.attr("transform", "translate(50,50)");
-	
 	svg.append("g")
 		.attr("id","scatterBody")
 		.attr("transform","translate(50,50)");
 	
 	svg.append("g").attr("transform", "translate(50,50)")
 		.attr("id","regLinearRegressionLine")
+	
+	svg.append("g").attr("class", "guideWrapper")
+		.attr("transform", "translate(50,50)");
 
 	svg.append("g").attr("transform", "translate(50,50)")
 		.attr("id","annotations")
@@ -545,9 +545,9 @@ function removeOrientingLabels(){
 function showOrientingLabels(region){
 	var delayIdx = 0;
 	for (var idx=0;idx<yearData.length;idx++){
-	    var element = d3.selectAll("#"+yearData[idx].countryCode);
-	    var x = +element.attr("cx"),
-	        y = +element.attr("cy")
+	    var countryPt = d3.selectAll("#"+yearData[idx].countryCode);
+	    var x = +countryPt.attr("cx"),
+	        y = +countryPt.attr("cy")
 		
 		delayIdx+=1;
 	    
@@ -665,9 +665,9 @@ function addVoronoi() {
 	removeVoronoi();
 	if (showGuideHint){
 		showGuide({data:yearDataByCountryCode['EGY']})
-	    var element = d3.selectAll("#EGY");
-	    var x = +element.attr("cx") - 190,
-	        y = +element.attr("cy") + 40;
+	    var egypt = d3.selectAll("#EGY");
+	    var x = +egypt.attr("cx") - 190,
+	        y = +egypt.attr("cy") + 40;
 	    
 	    //populate tooltip and show
 	    d3.select("#scatterBody")
@@ -742,29 +742,59 @@ function showGuide(d) {
     //populate tooltip and show
     if(d3.select("#"+d.data.countryCode+"-guide").empty()){
 	    //get location info for tooltip
-	    var element = d3.select("#"+d.data.countryCode);
-	    var x = +element.attr("cx"),
-	        y = +element.attr("cy");
+	    var countryPt = d3.select("#"+d.data.countryCode);
+	    var x = +countryPt.attr("cx"),
+	        y = +countryPt.attr("cy");
 	    
 	    var	color = "lightgrey";
 	    
-	    d3.select("#scatterBody").append("text")
+	    var wrapper = d3.selectAll(".guideWrapper");
+	    
+	    var bkgrnd = wrapper.append("rect")
+	        .attr("countryCode",d.data.countryCode)
+	        .attr("class","guideEl")
+	        .attr("selected",filterSet.countryCode.includes(d.data.countryCode))
+	        .style("pointer-events", "none")
+	    ;
+	    var txtbkgrnd = wrapper.append("rect")
+	        .attr("countryCode",d.data.countryCode)
+	        .attr("class","guideEl")
+	        .attr("selected",filterSet.countryCode.includes(d.data.countryCode))
+	        .style("pointer-events", "none")
+	    ;
+	    
+	    var label = wrapper.append("text")
 	        .attr("id", d.data.countryCode+"-guide")
 	        .attr("countryCode",d.data.countryCode)
 	        .attr("selected",filterSet.countryCode.includes(d.data.countryCode))
 	        .attr("class","guideEl guideText")
-	        .attr("x", x+3)
-	        .attr("y", y-3)
+	        .attr("x", x-3)
+	        .attr("y", y+3)
 	        .text(d.data.name)
 	        .style("pointer-events", "none")
-	        .style("opacity",0)
+	        .style("opacity",0);
+		
+	    var width = label.node().getBBox().width;
+		var height = label.node().getBBox().height;
+	    
+		label.attr("x",x-width-10)
+	    	.attr("y",y+height+5)
 	        .transition().duration(300)
 	        .style("opacity", 1);
+		
+		txtbkgrnd
+	    	.attr("x",x-width-12)
+	    	.attr("y",y+5)
+	    	.attr("width",width+4)
+	    	.attr("height",height+4)
+	    	.style("fill","white")
+	        .style("opacity",  0)
+	        .transition().duration(200)
+	    	.style("opacity",.5)
 
-	    //draw guidelines
-	    var wrapper = d3.selectAll(".guideWrapper");
 	    //vertical line
 	    wrapper.append("line").attr("class", "guideEl guide")
+	        .style("pointer-events", "none")
 	    	.attr("id",d.data.countryCode+"-xguide")
 	        .attr("countryCode",d.data.countryCode)
 	        .attr("selected",filterSet.countryCode.includes(d.data.countryCode))
@@ -776,6 +806,7 @@ function showGuide(d) {
 	        .style("opacity", 0.5);
 	    //horizontal line
 	    wrapper.append("line").attr("class", "guideEl guide")
+	        .style("pointer-events", "none")
 	    	.attr("id",d.data.countryCode+"-yguide")
 	        .attr("countryCode",d.data.countryCode)
 	        .attr("selected",filterSet.countryCode.includes(d.data.countryCode))
@@ -785,10 +816,22 @@ function showGuide(d) {
 	        .style("opacity",  0)
 	        .transition().duration(200)
 	        .style("opacity", 1.0);
+	    
+	    if (!filterSet.countryCode.includes(d.data.countryCode))
+		    bkgrnd
+		    	.attr("x",30)
+		    	.attr("y",y+1.5)
+		    	.attr("width",x-31.5)
+		    	.attr("height",(scatterHeight-125)-y)
+		    	.style("fill","white")
+		        .style("opacity",  0)
+		        .transition().duration(200)
+		    	.style("opacity",.75)
 	
 	    //write values on axis
 	    //Value on the x-axis
 	    wrapper.append("text").attr("class", "guideEl guide legend region-"+regionMap[d.data.region])
+	        .style("pointer-events", "none")
 	    	.attr("id",d.data.countryCode+"-xtext")
 	        .attr("countryCode",d.data.countryCode)
 	        .attr("selected",filterSet.countryCode.includes(d.data.countryCode))
@@ -803,6 +846,7 @@ function showGuide(d) {
 	
 	    //Value on the y-axis
 	    wrapper.append("text").attr("class", "guideEl guide legend region-"+regionMap[d.data.region])
+	        .style("pointer-events", "none")
 	    	.attr("id",d.data.countryCode+"-ytext")
 	        .attr("countryCode",d.data.countryCode)
 	        .attr("selected",filterSet.countryCode.includes(d.data.countryCode))
@@ -826,9 +870,10 @@ function addPointAnnotations(config){
 	for (var idx=0; idx<config.length;idx++){
 		var data = config[idx].data;
 		
-	    var element = d3.selectAll("#"+data.countryCode);
-	    var x = +element.attr("cx"),
-	        y = +element.attr("cy");
+	    var countryPt = d3.selectAll("#"+data.countryCode);
+	    var x = +countryPt.attr("cx"),
+	        y = +countryPt.attr("cy");
+	    countryPt
 		
 	    annotations[annotations.length] = {
 	    	note: {
