@@ -14,7 +14,7 @@ function init() {
     scatterWidth = document.getElementById("scatterplot").clientWidth;
     
     if (window.innerHeight>scatterHeight)
-    	document.querySelector("div.container").setAttribute("style","margin-top:"+(window.innerHeight-scatterHeight)/2+"px")
+    	document.querySelector("div.container").setAttribute("style","margin-top:"+((window.innerHeight-scatterHeight)/2)*.5+"px")
 
     document.querySelector(".vizText").setAttribute("style","height:"+(scatterHeight)+"px");
     
