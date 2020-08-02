@@ -67,10 +67,10 @@ function init() {
 		setScatterSubTitle("");
 		
 		addPointAnnotations([
-				{ data: yearDataByCountryCode['LUX'], position: [-10,-100] },
-				{ data: yearDataByCountryCode['USA'], position: [-20,50] },
-				{ data: yearDataByCountryCode['SOM'], position: [-30,100] },
-				{ data: yearDataByCountryCode['CAF'], position: [-80,-45] }
+				{ data: yearDataByCountryCode['SOM'], position: [-30,100],  delay: 600,  duration:300 },
+				{ data: yearDataByCountryCode['LUX'], position: [-10,-100], delay: 1200, duration:300 },
+				{ data: yearDataByCountryCode['CAF'], position: [-80,-45],  delay: 1800, duration:300 },
+				{ data: yearDataByCountryCode['USA'], position: [-20,50],   delay: 2400, duration:300 }
 			])
 	}
 	var showSection3 = function(){
@@ -84,10 +84,10 @@ function init() {
 		setScatterTitle("Outliers");
 		setScatterSubTitle("");
 		addPointAnnotations([
-			{ data: yearDataByCountryCode['BFA'], position: [-150,0] },
-			{ data: yearDataByCountryCode['GAB'], position: [70,10] },
-			{ data: yearDataByCountryCode['DMA'], position: [-150,-20] },
-			{ data: yearDataByCountryCode['SGP'], position: [55,-30] }
+			{ data: yearDataByCountryCode['GAB'], position: [70,10],    delay: 600,  duration:300 },
+			{ data: yearDataByCountryCode['DMA'], position: [-150,-20], delay: 1200, duration:300 },
+			{ data: yearDataByCountryCode['BFA'], position: [-150,0],   delay: 1800, duration:300 },
+			{ data: yearDataByCountryCode['SGP'], position: [55,-30],   delay: 2400, duration:300 }
 		])
 	}
 	var showSection4 = function(){
@@ -127,6 +127,8 @@ function init() {
 		hideGuide(null,true);
 		
 		setScatterTitle("East Asia & Pacific")
+		setScatterSubTitle("Regional Differences");
+		updateFilterSet("region","eap");
 		addLineAnnotations(
 				"East Asia & Pacific",
 				[
@@ -134,9 +136,9 @@ function init() {
 					"This may account for the relatively high TB" ,
 					"incidences of some the region's wealthier countries"
 				], 
-				{x: -150, y: -165 });
-		setScatterSubTitle("Regional Differences");
-		updateFilterSet("region","eap");
+				{x: -150, y: -165 },
+				300,
+				1200);
 	}
 	var showSection8 = function(){
 		removeOrientingLabels();
@@ -153,7 +155,9 @@ function init() {
 					"The relationship between Income and TB is far",
 					"weaker for the region than is the global norm"
 				], 
-				{x: -100, y: -60 });
+				{x: -100, y: -60 },
+				300,
+				1200);
 	}
 	var showSection9 = function(){
 		removeOrientingLabels();
@@ -527,7 +531,7 @@ function loadScatter() {
                 .attr("r", 0)
                 .attr("data",(d) => { return JSON.stringify(d); })
                 .attr("class","basecircle")
-                .transition().delay(300)
+                .transition().duration(300)
 	                .attr("r",(d,idx) => { return (d.gdp === null || d.tb === null) ? 0 : 3 ;})
     ;
 }
@@ -680,9 +684,9 @@ function addVoronoi() {
 	        .style("opacity",0)
 	        .style("font-style","italic")
 	        .text("hover over country for guides")
-	        .transition().delay(600)
+	        .transition().duration(600)
 	        .style("opacity",0.8)
-	        	.transition().delay(20000)
+	        	.transition().duration(20000)
 	        	.style("opacity",0)
 	        	.on("end", () => {hideGuide({ data: yearDataByCountryCode['EGY'] },false)});
 	    
@@ -737,7 +741,7 @@ function hideGuide(d,deselect) {
 function showGuide(d) {
 	showGuideHint = false;
 	hideGuide();
-	d3.select("#hoverHint").transition().delay(500).style("opacity",0).remove()
+	d3.select("#hoverHint").transition().duration(500).style("opacity",0).remove()
 	
     //populate tooltip and show
     if(d3.select("#"+d.data.countryCode+"-guide").empty()){
@@ -886,13 +890,15 @@ function addPointAnnotations(config){
 	    	x: x,
 	    	y: y,
 	    	dx: config[idx].position[0],
-	    	dy: config[idx].position[1]
+	    	dy: config[idx].position[1],
+	    	duration: config[idx].duration,
+	    	delay: config[idx].delay
 	    }
 	}
 
 	myAnnotationBuilder(annotations);
 }
-function addLineAnnotations(region, description, offset){
+function addLineAnnotations(region, description, offset, delay, duration){
     var regionYear = [];
     for (var idx=0; idx<yearData.length; idx++)
     	if (yearData[idx].region==region)
@@ -918,7 +924,8 @@ function addLineAnnotations(region, description, offset){
 	    	x: x,
 	    	y: y,
 	    	dx: offset.x,
-	    	dy: offset.y
+	    	dy: offset.y,
+	    	duration: duration
 	    }
 
     myAnnotationBuilder(annotations);
@@ -934,7 +941,8 @@ function myAnnotationBuilder(configArr){
 	annoSpace.selectAll("g").remove();
 	
 	for (var idx=0; idx<configArr.length; idx++){
-		var subGroup = annoSpace.append("g");
+		var subGroup = annoSpace.append("g")
+			.style("opacity",0);
 		
 		var background = subGroup.append("rect")
 
@@ -1023,6 +1031,14 @@ function myAnnotationBuilder(configArr){
 	        .attr("y1", decorPt1[1])
 	        .attr("x2", decorPt2[0])
 	        .attr("y2", decorPt2[1])
+	    
+	    var delay    = (config.delay!=null && config.delay>0) ? config.delay : 0;
+	    var duration = (config.duration!=null && config.duration>0) ? config.duration : 0;
+	        
+	    if (delay>0 || duration>0)
+	    	subGroup.transition().delay(delay).duration(duration).style("opacity",1);
+	    else
+	    	subGroup.style("opacity",1);
 	}
 }
 function euclidean(a, b){
