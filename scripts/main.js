@@ -137,7 +137,7 @@ function init() {
 					"incidences of some the region's wealthier countries"
 				], 
 				{x: -150, y: -165 },
-				300,
+				600,
 				1200);
 	}
 	var showSection8 = function(){
@@ -156,7 +156,7 @@ function init() {
 					"weaker for the region than is the global norm"
 				], 
 				{x: -100, y: -60 },
-				300,
+				600,
 				1200);
 	}
 	var showSection9 = function(){
@@ -684,9 +684,9 @@ function addVoronoi() {
 	        .style("opacity",0)
 	        .style("font-style","italic")
 	        .text("hover over country for guides")
-	        .transition().duration(600)
+	        .transition().delay(600)
 	        .style("opacity",0.8)
-	        	.transition().duration(20000)
+	        	.transition().delay(20000)
 	        	.style("opacity",0)
 	        	.on("end", () => {hideGuide({ data: yearDataByCountryCode['EGY'] },false)});
 	    
@@ -741,7 +741,7 @@ function hideGuide(d,deselect) {
 function showGuide(d) {
 	showGuideHint = false;
 	hideGuide();
-	d3.select("#hoverHint").transition().duration(500).style("opacity",0).remove()
+	d3.select("#hoverHint").transition().delay(500).style("opacity",0).remove()
 	
     //populate tooltip and show
     if(d3.select("#"+d.data.countryCode+"-guide").empty()){
@@ -925,7 +925,8 @@ function addLineAnnotations(region, description, offset, delay, duration){
 	    	y: y,
 	    	dx: offset.x,
 	    	dy: offset.y,
-	    	duration: duration
+	    	duration: duration,
+	    	delay: delay
 	    }
 
     myAnnotationBuilder(annotations);
