@@ -741,7 +741,7 @@ function hideGuide(d,deselect) {
 function showGuide(d) {
 	showGuideHint = false;
 	hideGuide();
-	d3.select("#hoverHint").transition().delay(500).style("opacity",0).remove()
+	d3.select("#hoverHint").remove();
 	
     //populate tooltip and show
     if(d3.select("#"+d.data.countryCode+"-guide").empty()){
